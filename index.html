@@ -26,6 +26,7 @@
       --bark-mid:   #2C2420;
       --sand:       #E8DFD0;
       --sand-deep:  #D4C9B8;
+      --gold:       #B08D3E;
       --serif: 'Cormorant Garamond', Georgia, serif;
       --sans:  'Jost', system-ui, sans-serif;
       --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
@@ -839,7 +840,6 @@
     }
     .who-h em { font-style: italic; color: var(--rose); }
 
-    .who-carousel-wrap,
     .sp-carousel-wrap {
       display: flex;
       align-items: center;
@@ -870,27 +870,24 @@
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
       -ms-overflow-style: none;
-      flex: 1 1 auto;
-      min-width: 0;
     }
     .who-grid::-webkit-scrollbar { display: none; }
 
     .who-card {
-      flex: 0 0 340px;
+      flex: 0 0 420px;
       scroll-snap-align: start;
-      padding: 60px 52px;
+      padding: 76px 64px;
       position: relative; overflow: hidden;
-      transition: background 0.45s ease;
+      background: var(--sand);
+      border-left: 3px solid var(--rose);
+      transition: background 0.3s ease;
     }
-    .who-card:nth-child(3n+1) { background: var(--sand); }
-    .who-card:nth-child(3n+2) { background: var(--bark); }
-    .who-card:nth-child(3n+3) { background: var(--sand-deep); }
-    .who-card:nth-child(3n+1):hover { background: #DDD3C0; }
-    .who-card:nth-child(3n+2):hover { background: var(--bark-mid); }
-    .who-card:nth-child(3n+3):hover { background: #C8BCAA; }
+    .who-card:nth-child(3n+2) { border-left-color: var(--sage); }
+    .who-card:nth-child(3n+3) { border-left-color: var(--gold); }
+    .who-card:hover { background: #DDD3C0; }
 
     .who-icon {
-      width: 40px; height: 40px; margin-bottom: 28px; opacity: 0.85;
+      width: 56px; height: 56px; margin-bottom: 36px; opacity: 1;
     }
 
     .who-card-title {
@@ -898,7 +895,6 @@
       font-size: 2.4rem; font-weight: 500; line-height: 1.1;
       color: var(--bark); margin-bottom: 20px;
     }
-    .who-card:nth-child(3n+2) .who-card-title { color: var(--cream); }
 
     .who-card-offer {
       font-size: 0.78rem; font-weight: 500;
@@ -906,20 +902,35 @@
       color: var(--rose); margin-bottom: 16px;
       text-transform: uppercase; font-family: var(--sans);
     }
-    .who-card:nth-child(3n+2) .who-card-offer { color: var(--rose-light); }
 
     .who-card-body {
       font-size: 0.84rem; font-weight: 300; line-height: 1.9;
       color: rgba(28,24,20,0.7); margin-bottom: 36px;
     }
-    .who-card:nth-child(3n+2) .who-card-body { color: rgba(245,240,232,0.62); }
 
     .who-stat {
       font-family: var(--serif);
       font-size: 1.35rem; font-weight: 400; font-style: italic;
       color: var(--rose);
     }
-    .who-card:nth-child(3n+2) .who-stat { color: var(--rose-light); }
+
+    .who-nav {
+      display: flex; justify-content: center; gap: 48px;
+      margin-top: 40px;
+    }
+    .who-nav-link {
+      font-family: var(--sans);
+      font-size: 0.6rem; font-weight: 500;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--rose);
+      background: none; border: none;
+      display: inline-flex; align-items: center; gap: 8px;
+      cursor: none;
+      transition: gap 0.3s ease, color 0.3s ease;
+    }
+    .who-nav-link:hover, .who-nav-link:focus-visible { color: var(--rose-deep); gap: 14px; }
+    .who-nav-prev::before { content: '←'; }
+    .who-nav-next::after { content: '→'; }
 
     /* ============================================================
        CLINIC B2B
@@ -1666,10 +1677,7 @@
       <h2 class="who-h reveal d1">The professionals who <em>show up</em><br>every single day</h2>
     </div>
 
-    <div class="who-carousel-wrap">
-      <button class="carousel-arrow who-arrow-prev" aria-label="Previous professionals" onclick="scrollWhoCarousel(-1)">&larr;</button>
-
-      <div class="who-grid" id="whoCarousel" role="region" aria-label="Who we dress" tabindex="0">
+    <div class="who-grid" id="whoCarousel" role="region" aria-label="Who we dress" tabindex="0">
 
       <div class="who-card reveal d1">
         <svg class="who-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1684,9 +1692,9 @@
 
       <div class="who-card reveal d2">
         <svg class="who-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="20" cy="10" r="6" stroke="#DEB8A8" stroke-width="1.5"/>
-          <path d="M8 38c0-6.63 5.37-12 12-12s12 5.37 12 12" stroke="#DEB8A8" stroke-width="1.5" stroke-linecap="round"/>
-          <path d="M17 26v8M14 30h6" stroke="#DEB8A8" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="20" cy="10" r="6" stroke="#7A8C6E" stroke-width="1.5"/>
+          <path d="M8 38c0-6.63 5.37-12 12-12s12 5.37 12 12" stroke="#7A8C6E" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M17 26v8M14 30h6" stroke="#7A8C6E" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
         <h3 class="who-card-title">Nursing &amp;<br>Allied Health</h3>
         <div class="who-card-offer">Shift-length comfort. Dignified design.</div>
@@ -1696,9 +1704,9 @@
 
       <div class="who-card reveal d3">
         <svg class="who-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="20" cy="10" r="6" stroke="#C4907A" stroke-width="1.5"/>
-          <path d="M8 38c0-6.63 5.37-12 12-12s12 5.37 12 12" stroke="#C4907A" stroke-width="1.5" stroke-linecap="round"/>
-          <path d="M14 28s2 5 6 5 6-5 6-5" stroke="#C4907A" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="20" cy="10" r="6" stroke="#B08D3E" stroke-width="1.5"/>
+          <path d="M8 38c0-6.63 5.37-12 12-12s12 5.37 12 12" stroke="#B08D3E" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M14 28s2 5 6 5 6-5 6-5" stroke="#B08D3E" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
         <h3 class="who-card-title">Beauty<br>Therapists</h3>
         <div class="who-card-offer">Aesthetic-first. Client impression-ready.</div>
@@ -1719,9 +1727,9 @@
 
       <div class="who-card reveal d2">
         <svg class="who-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M27 8l5 5-3 3-5-5 3-3z" stroke="#DEB8A8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M26 12L14 24l-3 7 7-3 12-12" stroke="#DEB8A8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M20 18l3 3M17 21l3 3" stroke="#DEB8A8" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M27 8l5 5-3 3-5-5 3-3z" stroke="#7A8C6E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M26 12L14 24l-3 7 7-3 12-12" stroke="#7A8C6E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M20 18l3 3M17 21l3 3" stroke="#7A8C6E" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
         <h3 class="who-card-title">Cosmetic &amp;<br>Aesthetic Injectors</h3>
         <div class="who-card-offer">Clinical precision. Client-facing polish.</div>
@@ -1731,9 +1739,9 @@
 
       <div class="who-card reveal d3">
         <svg class="who-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M8 28c0-8 5.5-14 12-14s12 6 12 14" stroke="#C4907A" stroke-width="1.5" stroke-linecap="round"/>
-          <path d="M6 28h28" stroke="#C4907A" stroke-width="1.5" stroke-linecap="round"/>
-          <circle cx="20" cy="10" r="2" stroke="#C4907A" stroke-width="1.5"/>
+          <path d="M8 28c0-8 5.5-14 12-14s12 6 12 14" stroke="#B08D3E" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M6 28h28" stroke="#B08D3E" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="20" cy="10" r="2" stroke="#B08D3E" stroke-width="1.5"/>
         </svg>
         <h3 class="who-card-title">Practice &amp;<br>Front-of-House</h3>
         <div class="who-card-offer">First impression. Every single shift.</div>
@@ -1741,9 +1749,11 @@
         <div class="who-stat">Coming to ORA.</div>
       </div>
 
-      </div>
+    </div>
 
-      <button class="carousel-arrow who-arrow-next" aria-label="Next professionals" onclick="scrollWhoCarousel(1)">&rarr;</button>
+    <div class="who-nav">
+      <button class="who-nav-link who-nav-prev" aria-label="Previous professionals" onclick="scrollWhoCarousel(-1)">Prev</button>
+      <button class="who-nav-link who-nav-next" aria-label="Next professionals" onclick="scrollWhoCarousel(1)">Next</button>
     </div>
   </section>
 
