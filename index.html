@@ -847,12 +847,12 @@
       position: relative; overflow: hidden;
       transition: background 0.45s ease;
     }
-    .who-card:nth-child(1) { background: var(--sand); }
-    .who-card:nth-child(2) { background: var(--bark); margin-top: 56px; }
-    .who-card:nth-child(3) { background: var(--sand-deep); margin-top: 112px; }
-    .who-card:nth-child(1):hover { background: #DDD3C0; }
-    .who-card:nth-child(2):hover { background: var(--bark-mid); }
-    .who-card:nth-child(3):hover { background: #C8BCAA; }
+    .who-card:nth-child(3n+1) { background: var(--sand); }
+    .who-card:nth-child(3n+2) { background: var(--bark); }
+    .who-card:nth-child(3n+3) { background: var(--sand-deep); }
+    .who-card:nth-child(3n+1):hover { background: #DDD3C0; }
+    .who-card:nth-child(3n+2):hover { background: var(--bark-mid); }
+    .who-card:nth-child(3n+3):hover { background: #C8BCAA; }
 
     .who-num {
       font-family: var(--serif);
@@ -862,7 +862,7 @@
       margin-bottom: 28px;
       display: block;
     }
-    .who-card:nth-child(2) .who-num { color: var(--rose-light); }
+    .who-card:nth-child(3n+2) .who-num { color: var(--rose-light); }
 
     .who-icon {
       width: 40px; height: 40px; margin-bottom: 28px; opacity: 0.85;
@@ -873,7 +873,7 @@
       font-size: 2.4rem; font-weight: 500; line-height: 1.1;
       color: var(--bark); margin-bottom: 20px;
     }
-    .who-card:nth-child(2) .who-card-title { color: var(--cream); }
+    .who-card:nth-child(3n+2) .who-card-title { color: var(--cream); }
 
     .who-card-offer {
       font-size: 0.78rem; font-weight: 500;
@@ -881,20 +881,20 @@
       color: var(--rose); margin-bottom: 16px;
       text-transform: uppercase; font-family: var(--sans);
     }
-    .who-card:nth-child(2) .who-card-offer { color: var(--rose-light); }
+    .who-card:nth-child(3n+2) .who-card-offer { color: var(--rose-light); }
 
     .who-card-body {
       font-size: 0.84rem; font-weight: 300; line-height: 1.9;
       color: rgba(28,24,20,0.7); margin-bottom: 36px;
     }
-    .who-card:nth-child(2) .who-card-body { color: rgba(245,240,232,0.62); }
+    .who-card:nth-child(3n+2) .who-card-body { color: rgba(245,240,232,0.62); }
 
     .who-stat {
       font-family: var(--serif);
       font-size: 1.35rem; font-weight: 400; font-style: italic;
       color: var(--rose);
     }
-    .who-card:nth-child(2) .who-stat { color: var(--rose-light); }
+    .who-card:nth-child(3n+2) .who-stat { color: var(--rose-light); }
 
     /* ============================================================
        CLINIC B2B
@@ -1209,8 +1209,7 @@
       .sp-grid { grid-template-columns: 1fr; gap: 3px; }
       .sp-card:nth-child(n) { margin-top: 0; }
       #who { padding: 100px 48px; }
-      .who-grid { grid-template-columns: 1fr; gap: 3px; }
-      .who-card:nth-child(n) { margin-top: 0; }
+      .who-grid { grid-template-columns: repeat(2, 1fr); gap: 3px; }
       #clinic { padding: 100px 48px; }
       .clinic-inner { grid-template-columns: 1fr; gap: 60px; }
       #mission { padding: 100px 48px; }
@@ -1232,6 +1231,7 @@
       #mission { padding: 80px 24px; }
       .col-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
       .col-card-footer { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .who-grid { grid-template-columns: 1fr; }
       .form-row { grid-template-columns: 1fr; }
       footer { padding: 60px 24px; }
       .sp-grid { grid-template-columns: 1fr; }
@@ -1484,6 +1484,7 @@
         <h3 class="who-card-title">Dental<br>Professionals</h3>
         <div class="who-card-offer">Precision cuts. Pocket-forward design.</div>
         <p class="who-card-body">From hygienists to periodontists, dental professionals spend their days creating confident smiles. ORA scrubs are designed for the exacting standards of the dental chair — structured where you need it, unrestricted where it counts, in colours that elevate the whole clinic aesthetic.</p>
+        <div class="who-stat">45,000+ dental professionals nationwide</div>
       </div>
 
       <div class="who-card reveal d2">
@@ -1496,6 +1497,7 @@
         <h3 class="who-card-title">Nursing &amp;<br>Allied Health</h3>
         <div class="who-card-offer">Shift-length comfort. Dignified design.</div>
         <p class="who-card-body">Australia's nurses are the backbone of healthcare — resilient, essential, tireless. ORA honours their dedication with scrubs built for 12-hour shifts: performance fabrics, considered pockets, and colours that celebrate who they are rather than erase them behind a uniform.</p>
+        <div class="who-stat">300,000+ nurses &amp; allied health workers</div>
       </div>
 
       <div class="who-card reveal d3">
@@ -1508,6 +1510,45 @@
         <h3 class="who-card-title">Beauty<br>Therapists</h3>
         <div class="who-card-offer">Aesthetic-first. Client impression-ready.</div>
         <p class="who-card-body">Whether you're in a studio, a salon, or a clinic — your uniform is the first thing clients see. ORA brings the aesthetic standard your environment demands: fashion-forward silhouettes, tactile fabrics, and a presence that walks in before you say a word.</p>
+        <div class="who-stat">95,000+ beauty therapists</div>
+      </div>
+
+      <div class="who-card reveal d1">
+        <span class="who-num">04</span>
+        <svg class="who-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 6h8v6l3 3v17a2 2 0 0 1-2 2H15a2 2 0 0 1-2-2V15l3-3V6z" stroke="#C4907A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M13 20h14" stroke="#C4907A" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <h3 class="who-card-title">Nail<br>Technicians</h3>
+        <div class="who-card-offer">Precision work. All-day wear.</div>
+        <p class="who-card-body">Hours bent over a nail station demand ease of movement and fabric that keeps its shape wash after wash. ORA is cut for close, careful work — breathable, flexible, and finished in colours that suit a studio built on detail.</p>
+        <div class="who-stat">Coming to ORA.</div>
+      </div>
+
+      <div class="who-card reveal d2">
+        <span class="who-num">05</span>
+        <svg class="who-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M27 8l5 5-3 3-5-5 3-3z" stroke="#DEB8A8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M26 12L14 24l-3 7 7-3 12-12" stroke="#DEB8A8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M20 18l3 3M17 21l3 3" stroke="#DEB8A8" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <h3 class="who-card-title">Cosmetic &amp;<br>Aesthetic Injectors</h3>
+        <div class="who-card-offer">Clinical precision. Client-facing polish.</div>
+        <p class="who-card-body">Aesthetic nurses and cosmetic injectors sit at the intersection of clinical trust and personal presentation. ORA is built for that exact standard — structured, considered, and confident enough to match a room where every detail is being read.</p>
+        <div class="who-stat">Coming to ORA.</div>
+      </div>
+
+      <div class="who-card reveal d3">
+        <span class="who-num">06</span>
+        <svg class="who-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 28c0-8 5.5-14 12-14s12 6 12 14" stroke="#C4907A" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M6 28h28" stroke="#C4907A" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="20" cy="10" r="2" stroke="#C4907A" stroke-width="1.5"/>
+        </svg>
+        <h3 class="who-card-title">Practice &amp;<br>Front-of-House</h3>
+        <div class="who-card-offer">First impression. Every single shift.</div>
+        <p class="who-card-body">Receptionists and practice managers set the tone before a patient ever sees a clinician. ORA gives front-of-house teams the same considered fit and finish as the rest of the practice — approachable, sharp, and unmistakably part of the team.</p>
+        <div class="who-stat">Coming to ORA.</div>
       </div>
 
     </div>
