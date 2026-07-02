@@ -1038,6 +1038,14 @@
     }
     .wl-submit:hover { background: var(--rose); }
     .wl-submit:active { transform: scale(0.97); }
+    .wl-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .wl-submit-error {
+      display: none; margin-top: 18px;
+      font-size: 0.72rem; font-weight: 300; line-height: 1.6;
+      color: #B84A3A;
+    }
+    .wl-submit-error.show { display: block; }
 
     .wl-success {
       display: none; background: var(--sand);
@@ -1519,6 +1527,7 @@
           <span class="fe">Please select your profession</span>
         </div>
         <button type="submit" class="wl-submit">Register Interest &rarr;</button>
+        <p class="wl-submit-error" id="wlSubmitError">Something went wrong submitting your details — please try again, or email us directly.</p>
       </form>
 
       <div class="wl-success" id="wlSuccess">
@@ -1618,8 +1627,9 @@
       }, { passive: true });
     }
 
-    const form    = document.getElementById('wlForm');
-    const success = document.getElementById('wlSuccess');
+    const form      = document.getElementById('wlForm');
+    const success   = document.getElementById('wlSuccess');
+    const submitErr = document.getElementById('wlSubmitError');
     function validEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
     function setError(id, show) { document.getElementById(id).classList.toggle('has-error', show); }
     document.getElementById('f-first').addEventListener('input', function() { if (this.value.trim()) setError('fg-first', false); });
@@ -1628,6 +1638,7 @@
     document.getElementById('f-prof').addEventListener('change', function() { if (this.value) setError('fg-prof', false); });
     form.addEventListener('submit', e => {
       e.preventDefault();
+      submitErr.classList.remove('show');
       const first = document.getElementById('f-first').value.trim();
       const last  = document.getElementById('f-last').value.trim();
       const email = document.getElementById('f-email').value.trim();
@@ -1654,6 +1665,7 @@
         .catch(err => {
           console.error('Could not submit waitlist form:', err);
           submitBtn.disabled = false;
+          submitErr.classList.add('show');
         });
     });
     // Tab switching — Women / Men
