@@ -836,13 +836,44 @@
     }
     .who-h em { font-style: italic; color: var(--rose); }
 
-    .who-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 3px;
+    .who-carousel-wrap {
+      display: flex;
+      align-items: center;
+      gap: 20px;
     }
 
+    .who-arrow {
+      flex: 0 0 auto;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: var(--cream);
+      border: 1px solid var(--rose);
+      color: var(--rose);
+      font-family: var(--serif); font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: none;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    .who-arrow:hover, .who-arrow:focus-visible {
+      background: var(--rose); color: var(--cream);
+    }
+
+    .who-grid {
+      display: flex;
+      gap: 3px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .who-grid::-webkit-scrollbar { display: none; }
+
     .who-card {
+      flex: 0 0 340px;
+      scroll-snap-align: start;
       padding: 60px 52px;
       position: relative; overflow: hidden;
       transition: background 0.45s ease;
@@ -853,16 +884,6 @@
     .who-card:nth-child(3n+1):hover { background: #DDD3C0; }
     .who-card:nth-child(3n+2):hover { background: var(--bark-mid); }
     .who-card:nth-child(3n+3):hover { background: #C8BCAA; }
-
-    .who-num {
-      font-family: var(--serif);
-      font-size: 1rem; font-weight: 600;
-      letter-spacing: 0.1em;
-      color: var(--rose);
-      margin-bottom: 28px;
-      display: block;
-    }
-    .who-card:nth-child(3n+2) .who-num { color: var(--rose-light); }
 
     .who-icon {
       width: 40px; height: 40px; margin-bottom: 28px; opacity: 0.85;
@@ -1209,7 +1230,6 @@
       .sp-grid { grid-template-columns: 1fr; gap: 3px; }
       .sp-card:nth-child(n) { margin-top: 0; }
       #who { padding: 100px 48px; }
-      .who-grid { grid-template-columns: repeat(2, 1fr); gap: 3px; }
       #clinic { padding: 100px 48px; }
       .clinic-inner { grid-template-columns: 1fr; gap: 60px; }
       #mission { padding: 100px 48px; }
@@ -1231,7 +1251,7 @@
       #mission { padding: 80px 24px; }
       .col-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
       .col-card-footer { flex-direction: column; align-items: flex-start; gap: 8px; }
-      .who-grid { grid-template-columns: 1fr; }
+      .who-card { flex-basis: 82vw; }
       .form-row { grid-template-columns: 1fr; }
       footer { padding: 60px 24px; }
       .sp-grid { grid-template-columns: 1fr; }
@@ -1473,10 +1493,12 @@
       <h2 class="who-h reveal d1">The professionals who <em>show up</em><br>every single day</h2>
     </div>
 
-    <div class="who-grid">
+    <div class="who-carousel-wrap">
+      <button class="who-arrow who-arrow-prev" aria-label="Previous professionals" onclick="scrollWhoCarousel(-1)">&larr;</button>
+
+      <div class="who-grid" id="whoCarousel" role="region" aria-label="Who we dress" tabindex="0">
 
       <div class="who-card reveal d1">
-        <span class="who-num">01</span>
         <svg class="who-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M13 9C13 6.24 15.24 4 18 4h4c2.76 0 5 2.24 5 5 0 1.8-1 3.35-2.46 4.18C26.2 15 27 16.9 27 19c0 5.52-3.13 10-7 10s-7-4.48-7-10c0-2.1.8-4 2.1-5.42A5 5 0 0 1 13 9z" stroke="#C4907A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M7 38c0-6.08 5.82-11 13-11s13 4.92 13 11" stroke="#C4907A" stroke-width="1.5" stroke-linecap="round"/>
@@ -1488,7 +1510,6 @@
       </div>
 
       <div class="who-card reveal d2">
-        <span class="who-num">02</span>
         <svg class="who-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="20" cy="10" r="6" stroke="#DEB8A8" stroke-width="1.5"/>
           <path d="M8 38c0-6.63 5.37-12 12-12s12 5.37 12 12" stroke="#DEB8A8" stroke-width="1.5" stroke-linecap="round"/>
@@ -1501,7 +1522,6 @@
       </div>
 
       <div class="who-card reveal d3">
-        <span class="who-num">03</span>
         <svg class="who-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="20" cy="10" r="6" stroke="#C4907A" stroke-width="1.5"/>
           <path d="M8 38c0-6.63 5.37-12 12-12s12 5.37 12 12" stroke="#C4907A" stroke-width="1.5" stroke-linecap="round"/>
@@ -1514,7 +1534,6 @@
       </div>
 
       <div class="who-card reveal d1">
-        <span class="who-num">04</span>
         <svg class="who-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M16 6h8v6l3 3v17a2 2 0 0 1-2 2H15a2 2 0 0 1-2-2V15l3-3V6z" stroke="#C4907A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M13 20h14" stroke="#C4907A" stroke-width="1.5" stroke-linecap="round"/>
@@ -1526,7 +1545,6 @@
       </div>
 
       <div class="who-card reveal d2">
-        <span class="who-num">05</span>
         <svg class="who-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M27 8l5 5-3 3-5-5 3-3z" stroke="#DEB8A8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M26 12L14 24l-3 7 7-3 12-12" stroke="#DEB8A8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1539,7 +1557,6 @@
       </div>
 
       <div class="who-card reveal d3">
-        <span class="who-num">06</span>
         <svg class="who-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M8 28c0-8 5.5-14 12-14s12 6 12 14" stroke="#C4907A" stroke-width="1.5" stroke-linecap="round"/>
           <path d="M6 28h28" stroke="#C4907A" stroke-width="1.5" stroke-linecap="round"/>
@@ -1551,6 +1568,9 @@
         <div class="who-stat">Coming to ORA.</div>
       </div>
 
+      </div>
+
+      <button class="who-arrow who-arrow-next" aria-label="Next professionals" onclick="scrollWhoCarousel(1)">&rarr;</button>
     </div>
   </section>
 
@@ -1719,7 +1739,7 @@
       requestAnimationFrame(tick);
     })();
 
-    document.querySelectorAll('a, button, .col-card, .sw-item, .csw, .who-card, .sp-card, .clinic-feature, select, input').forEach(el => {
+    document.querySelectorAll('a, button, .col-card, .sw-item, .csw, .sp-card, .clinic-feature, select, input').forEach(el => {
       el.addEventListener('mouseenter', () => document.body.classList.add('cur-hover'));
       el.addEventListener('mouseleave', () => document.body.classList.remove('cur-hover'));
     });
@@ -1813,6 +1833,14 @@
         document.getElementById('tab-' + tab.dataset.tab).classList.remove('hidden');
       });
     });
+
+    // Who We Dress carousel
+    function scrollWhoCarousel(direction) {
+      const track = document.getElementById('whoCarousel');
+      const card = track.querySelector('.who-card');
+      const cardWidth = card ? card.getBoundingClientRect().width : 340;
+      track.scrollBy({ left: direction * (cardWidth + 3), behavior: 'smooth' });
+    }
   </script>
 
   <!-- LIVE PRODUCT CATALOG -->
