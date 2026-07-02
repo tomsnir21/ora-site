@@ -599,7 +599,8 @@
 
     .fabric-reveal {
       position: absolute; inset: 0; z-index: 3;
-      background: rgba(28,24,20,0.85);
+      background: rgba(28,24,20,0.7);
+      backdrop-filter: blur(6px);
       display: flex; align-items: center; justify-content: center;
       text-align: center; padding: 20px;
       opacity: 0; transition: opacity 0.3s ease;
@@ -666,14 +667,15 @@
     }
 
     .skeleton-card {
-      background: var(--sand); height: 400px; position: relative; overflow: hidden;
+      background: linear-gradient(155deg, #E8DFD0 0%, #C0B4A0 100%);
+      height: 400px; position: relative; overflow: hidden;
     }
     .skeleton-card::after {
       content: '';
       position: absolute; inset: 0;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      background: linear-gradient(90deg, transparent, rgba(245,240,232,0.4), transparent);
       transform: translateX(-100%);
-      animation: shimmer 1.4s infinite;
+      animation: shimmer 2.2s var(--ease) infinite;
     }
     @keyframes shimmer { 100% { transform: translateX(100%); } }
 
@@ -690,7 +692,7 @@
       padding: 8px 18px; cursor: none;
       transition: all 0.3s ease;
     }
-    .filter-pill:hover { background: rgba(245,240,232,0.08); color: rgba(245,240,232,0.85); }
+    .filter-pill:hover,
     .filter-pill.active {
       background: var(--rose); border-color: var(--rose); color: var(--cream);
     }
