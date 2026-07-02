@@ -228,6 +228,11 @@
       animation: fadeUp 1s var(--ease) 0.2s forwards;
     }
 
+    .hero-time {
+      font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: rgba(245,240,232,0.4); margin-top: 10px;
+    }
+
     .hero-title {
       font-family: var(--serif);
       font-weight: 300; line-height: 0.88;
@@ -592,6 +597,17 @@
       pointer-events: none;
     }
 
+    .fabric-reveal {
+      position: absolute; inset: 0; z-index: 3;
+      background: rgba(28,24,20,0.85);
+      display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 20px;
+      opacity: 0; transition: opacity 0.3s ease;
+      color: var(--cream); font-size: 0.7rem; letter-spacing: 0.08em;
+      text-transform: uppercase; pointer-events: none;
+    }
+    .col-card:hover .fabric-reveal, .col-card:focus-within .fabric-reveal { opacity: 1; }
+
     .col-cat-tag {
       position: absolute; top: 14px; left: 14px; z-index: 2;
       font-size: 0.5rem; font-weight: 500; letter-spacing: 0.2em;
@@ -647,6 +663,36 @@
     .btn-notify:hover {
       background: var(--rose); border-color: var(--rose);
       color: var(--cream);
+    }
+
+    .skeleton-card {
+      background: var(--sand); height: 400px; position: relative; overflow: hidden;
+    }
+    .skeleton-card::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transform: translateX(-100%);
+      animation: shimmer 1.4s infinite;
+    }
+    @keyframes shimmer { 100% { transform: translateX(100%); } }
+
+    .col-filters {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      margin-bottom: 32px;
+    }
+    .filter-pill {
+      font-family: var(--sans);
+      font-size: 0.58rem; font-weight: 500;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: rgba(245,240,232,0.5);
+      background: none; border: 1px solid rgba(245,240,232,0.18);
+      padding: 8px 18px; cursor: none;
+      transition: all 0.3s ease;
+    }
+    .filter-pill:hover { background: rgba(245,240,232,0.08); color: rgba(245,240,232,0.85); }
+    .filter-pill.active {
+      background: var(--rose); border-color: var(--rose); color: var(--cream);
     }
 
     /* ============================================================
@@ -1168,6 +1214,26 @@
     @media (max-width: 480px) {
       .col-grid { grid-template-columns: 1fr; }
     }
+
+    /* ============================================================
+       ACCESSIBILITY
+    ============================================================ */
+    a:focus-visible, button:focus-visible, input:focus-visible,
+    select:focus-visible {
+      outline: 2px solid var(--rose);
+      outline-offset: 3px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      #cur, #cur-ring { display: none !important; }
+      html { cursor: auto !important; }
+    }
   </style>
 </head>
 <body>
@@ -1191,6 +1257,7 @@
   <section id="hero">
     <div class="hero-left">
       <div class="hero-eyebrow">Australia's first premium designer scrubs</div>
+      <div class="hero-time" id="heroTime"></div>
       <h1 class="hero-title">
         <span class="line line-1"><span class="li">Wear</span></span>
         <span class="line line-2"><span class="li">your</span></span>
@@ -1313,11 +1380,13 @@
 
     <!-- WOMEN -->
     <div class="col-panel" id="tab-women">
+      <div class="col-filters" id="filters-women"></div>
       <div class="col-grid"></div>
     </div>
 
     <!-- MEN -->
     <div class="col-panel hidden" id="tab-men">
+      <div class="col-filters" id="filters-men"></div>
       <div class="col-grid"></div>
     </div>
 
@@ -1683,7 +1752,13 @@
   <script>
     const PRODUCTS_API = "https://app--ora-product-manager.base44.app/api/apps/6a45a4b28a38a2ae9dfefec7/functions/publicProducts";
 
+    function skeletonCards(n = 6) {
+      return Array.from({ length: n }).map(() => '<div class="col-card skeleton-card"></div>').join('');
+    }
+
     async function loadProducts() {
+      document.querySelector('#tab-women .col-grid').innerHTML = skeletonCards();
+      document.querySelector('#tab-men .col-grid').innerHTML = skeletonCards();
       try {
         const res = await fetch(PRODUCTS_API);
         if (!res.ok) throw new Error('Failed to fetch products');
@@ -1694,10 +1769,30 @@
         document.querySelector('#tab-men .col-grid').innerHTML = men.map(productCard).join('');
         document.querySelector('[data-tab="women"]').textContent = `Women — ${women.length} Styles`;
         document.querySelector('[data-tab="men"]').textContent = `Men — ${men.length} Styles`;
+        renderFilters('filters-women', '#tab-women .col-grid', women);
+        renderFilters('filters-men', '#tab-men .col-grid', men);
       } catch (err) {
         console.error('Could not load products:', err);
         document.querySelector('#tab-women .col-grid').innerHTML = '<p style="color:rgba(245,240,232,0.5)">Products are loading — check back shortly.</p>';
+        document.querySelector('#tab-men .col-grid').innerHTML = '';
       }
+    }
+
+    function renderFilters(containerId, gridSelector, items) {
+      const container = document.getElementById(containerId);
+      const categories = ['All', ...new Set(items.map(p => p.category))];
+      container.innerHTML = categories.map((cat, i) =>
+        `<button class="filter-pill${i === 0 ? ' active' : ''}" data-category="${cat}">${cat}</button>`
+      ).join('');
+      container.querySelectorAll('.filter-pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+          container.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          const cat = pill.dataset.category;
+          const filtered = cat === 'All' ? items : items.filter(p => p.category === cat);
+          document.querySelector(gridSelector).innerHTML = filtered.map(productCard).join('');
+        });
+      });
     }
 
     function productCard(p) {
@@ -1711,6 +1806,7 @@
             <div class="col-cat-tag">${p.category}</div>
             ${img}
             <div class="col-price-tag">$${p.price_aud} AUD</div>
+            <div class="fabric-reveal">Antifluido DWR finish<br>Four-way stretch<br>Fluid-resistant</div>
           </div>
           <div class="col-name">${p.name}</div>
           <div class="col-colour">${p.colour}</div>
@@ -1722,6 +1818,20 @@
     }
 
     document.addEventListener('DOMContentLoaded', loadProducts);
+
+    function sydneyGreeting() {
+      const hour = parseInt(new Intl.DateTimeFormat('en-AU', { hour: 'numeric', hour12: false, timeZone: 'Australia/Sydney' }).format(new Date()));
+      const time = new Intl.DateTimeFormat('en-AU', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'Australia/Sydney' }).format(new Date());
+      if (hour >= 4 && hour < 7) return `It's ${time} in Sydney — first shifts are starting.`;
+      if (hour >= 7 && hour < 12) return `It's ${time} in Sydney — clinics are opening.`;
+      if (hour >= 12 && hour < 17) return `It's ${time} in Sydney — studios are in full swing.`;
+      if (hour >= 17 && hour < 21) return `It's ${time} in Sydney — evening shifts are underway.`;
+      return `It's ${time} in Sydney — night shift is on.`;
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      const el = document.getElementById('heroTime');
+      if (el) el.textContent = sydneyGreeting();
+    });
   </script>
 
 </body>
