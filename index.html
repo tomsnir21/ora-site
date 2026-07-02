@@ -597,17 +597,41 @@
       pointer-events: none;
     }
 
-    .fabric-reveal {
-      position: absolute; inset: 0; z-index: 3;
-      background: rgba(28,24,20,0.7);
-      backdrop-filter: blur(6px);
+    .fabric-info-btn {
+      position: absolute; z-index: 3;
+      bottom: 16px; right: 16px;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--cream);
+      border: 1px solid var(--rose);
+      color: var(--rose);
+      font-family: var(--serif); font-style: italic; font-weight: 600; font-size: 0.85rem;
       display: flex; align-items: center; justify-content: center;
-      text-align: center; padding: 20px;
-      opacity: 0; transition: opacity 0.3s ease;
-      color: var(--cream); font-size: 0.7rem; letter-spacing: 0.08em;
-      text-transform: uppercase; pointer-events: none;
+      cursor: none;
+      transition: background 0.3s ease, color 0.3s ease;
     }
-    .col-card:hover .fabric-reveal, .col-card:focus-within .fabric-reveal { opacity: 1; }
+    .fabric-info-btn:hover, .fabric-info-btn:focus-visible {
+      background: var(--rose); color: var(--cream);
+    }
+
+    .fabric-popover {
+      position: absolute; z-index: 4;
+      bottom: 56px; right: 16px;
+      width: 190px;
+      background: rgba(28,24,20,0.92);
+      backdrop-filter: blur(10px);
+      color: var(--cream);
+      font-size: 0.62rem; letter-spacing: 0.08em; line-height: 1.6;
+      text-transform: uppercase;
+      padding: 14px 16px;
+      opacity: 0; visibility: hidden; transform: translateY(8px);
+      transition: opacity 0.3s var(--ease), transform 0.3s var(--ease), visibility 0.3s;
+      pointer-events: none;
+    }
+    .fabric-popover.show {
+      opacity: 1; visibility: visible; transform: translateY(0);
+      pointer-events: auto;
+    }
 
     .col-cat-tag {
       position: absolute; top: 14px; left: 14px; z-index: 2;
@@ -1808,7 +1832,8 @@
             <div class="col-cat-tag">${p.category}</div>
             ${img}
             <div class="col-price-tag">$${p.price_aud} AUD</div>
-            <div class="fabric-reveal">Antifluido DWR finish<br>Four-way stretch<br>Fluid-resistant</div>
+            <button class="fabric-info-btn" aria-label="View fabric details" aria-expanded="false" onclick="toggleFabricInfo(this)">i</button>
+            <div class="fabric-popover">Antifluido DWR finish · Four-way stretch · Fluid-resistant</div>
           </div>
           <div class="col-name">${p.name}</div>
           <div class="col-colour">${p.colour}</div>
@@ -1820,6 +1845,30 @@
     }
 
     document.addEventListener('DOMContentLoaded', loadProducts);
+
+    function closeFabricInfo(popover) {
+      popover.classList.remove('show');
+      popover.previousElementSibling.setAttribute('aria-expanded', 'false');
+    }
+
+    function toggleFabricInfo(btn) {
+      const popover = btn.nextElementSibling;
+      const isOpen = popover.classList.contains('show');
+      document.querySelectorAll('.fabric-popover.show').forEach(closeFabricInfo);
+      if (!isOpen) {
+        popover.classList.add('show');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    document.addEventListener('click', e => {
+      document.querySelectorAll('.fabric-popover.show').forEach(popover => {
+        const btn = popover.previousElementSibling;
+        if (e.target !== btn && !popover.contains(e.target)) {
+          closeFabricInfo(popover);
+        }
+      });
+    });
 
     function sydneyGreeting() {
       const hour = parseInt(new Intl.DateTimeFormat('en-AU', { hour: 'numeric', hour12: false, timeZone: 'Australia/Sydney' }).format(new Date()));
