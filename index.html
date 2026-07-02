@@ -752,27 +752,30 @@
     .sp-headline em { font-style: italic; color: var(--rose); }
 
     .sp-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      display: flex;
       gap: 3px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      flex: 1 1 auto;
+      min-width: 0;
     }
+    .sp-grid::-webkit-scrollbar { display: none; }
 
     .sp-card {
+      flex: 0 0 340px;
+      scroll-snap-align: start;
       background: var(--sand);
       padding: 56px 48px;
       position: relative;
       transition: background 0.4s ease, transform 0.4s var(--ease);
     }
-    .sp-card:nth-child(2) {
-      background: var(--bark);
-      margin-top: 36px;
-    }
-    .sp-card:nth-child(3) {
-      margin-top: 18px;
-    }
-    .sp-card:nth-child(1):hover,
-    .sp-card:nth-child(3):hover { background: var(--sand-deep); }
-    .sp-card:nth-child(2):hover { background: var(--bark-mid); }
+    .sp-card:nth-child(3n+2) { background: var(--bark); }
+    .sp-card:nth-child(3n+1):hover,
+    .sp-card:nth-child(3n+3):hover { background: var(--sand-deep); }
+    .sp-card:nth-child(3n+2):hover { background: var(--bark-mid); }
 
     .sp-mark {
       font-family: var(--serif);
@@ -780,7 +783,7 @@
       color: var(--rose); margin-bottom: 24px;
       display: block; opacity: 0.6;
     }
-    .sp-card:nth-child(2) .sp-mark { color: var(--rose-light); }
+    .sp-card:nth-child(3n+2) .sp-mark { color: var(--rose-light); }
 
     .sp-quote {
       font-family: var(--serif);
@@ -789,7 +792,7 @@
       line-height: 1.5; color: var(--bark);
       margin-bottom: 32px;
     }
-    .sp-card:nth-child(2) .sp-quote { color: var(--cream); }
+    .sp-card:nth-child(3n+2) .sp-quote { color: var(--cream); }
 
     .sp-rule {
       width: 32px; height: 1px;
@@ -802,14 +805,14 @@
       letter-spacing: 0.12em; text-transform: uppercase;
       color: var(--bark); margin-bottom: 4px;
     }
-    .sp-card:nth-child(2) .sp-author { color: var(--cream); }
+    .sp-card:nth-child(3n+2) .sp-author { color: var(--cream); }
 
     .sp-role {
       font-size: 0.65rem; font-weight: 300;
       letter-spacing: 0.08em;
       color: rgba(28,24,20,0.45);
     }
-    .sp-card:nth-child(2) .sp-role { color: rgba(245,240,232,0.45); }
+    .sp-card:nth-child(3n+2) .sp-role { color: rgba(245,240,232,0.45); }
 
     .sp-stars {
       display: flex; gap: 3px; margin-bottom: 20px;
@@ -819,7 +822,7 @@
       background: var(--rose); opacity: 0.8;
       clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
     }
-    .sp-card:nth-child(2) .sp-star { background: var(--rose-light); }
+    .sp-card:nth-child(3n+2) .sp-star { background: var(--rose-light); }
 
     /* ============================================================
        WHO WE DRESS
@@ -836,13 +839,14 @@
     }
     .who-h em { font-style: italic; color: var(--rose); }
 
-    .who-carousel-wrap {
+    .who-carousel-wrap,
+    .sp-carousel-wrap {
       display: flex;
       align-items: center;
       gap: 20px;
     }
 
-    .who-arrow {
+    .carousel-arrow {
       flex: 0 0 auto;
       width: 44px; height: 44px;
       border-radius: 50%;
@@ -854,7 +858,7 @@
       cursor: none;
       transition: background 0.3s ease, color 0.3s ease;
     }
-    .who-arrow:hover, .who-arrow:focus-visible {
+    .carousel-arrow:hover, .carousel-arrow:focus-visible {
       background: var(--rose); color: var(--cream);
     }
 
@@ -1259,8 +1263,6 @@
       .col-header { grid-template-columns: 1fr; }
       .col-grid { grid-template-columns: repeat(2, 1fr); }
       #social-proof { padding: 100px 48px; }
-      .sp-grid { grid-template-columns: 1fr; gap: 3px; }
-      .sp-card:nth-child(n) { margin-top: 0; }
       #who { padding: 100px 48px; }
       #clinic { padding: 100px 48px; }
       .clinic-inner { grid-template-columns: 1fr; gap: 60px; }
@@ -1285,9 +1287,9 @@
       .col-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
       .col-card-footer { flex-direction: column; align-items: flex-start; gap: 8px; }
       .who-card { flex-basis: 82vw; }
+      .sp-card { flex-basis: 82vw; }
       .form-row { grid-template-columns: 1fr; }
       footer { padding: 60px 24px; }
-      .sp-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 480px) {
@@ -1478,7 +1480,10 @@
       <h2 class="sp-headline reveal d1">Worn by those who <em>care</em></h2>
     </div>
 
-    <div class="sp-grid">
+    <div class="sp-carousel-wrap">
+      <button class="carousel-arrow sp-arrow-prev" aria-label="Previous reviews" onclick="scrollSpCarousel(-1)">&larr;</button>
+
+      <div class="sp-grid" id="spCarousel" role="region" aria-label="Customer reviews" tabindex="0">
 
       <div class="sp-card reveal d1">
         <div class="sp-stars">
@@ -1486,7 +1491,7 @@
           <div class="sp-star"></div><div class="sp-star"></div>
         </div>
         <span class="sp-mark">&ldquo;</span>
-        <p class="sp-quote">Finally scrubs I actually want to wear. I've been waiting for something like this my whole career — scrubs that look like they belong in a boutique, not a supply closet.</p>
+        <p class="sp-quote">Finally scrubs I actually want to wear. Something that looks like it belongs in a boutique, not a supply closet.</p>
         <div class="sp-rule"></div>
         <div class="sp-author">Sarah K.</div>
         <div class="sp-role">Dental Nurse &middot; Sydney, NSW</div>
@@ -1498,7 +1503,7 @@
           <div class="sp-star"></div><div class="sp-star"></div>
         </div>
         <span class="sp-mark">&ldquo;</span>
-        <p class="sp-quote">My whole clinic ordered together. The cut, the fabric weight, the colours — everything is considered. This is what Australian healthcare has been missing.</p>
+        <p class="sp-quote">My whole clinic pre-ordered. The cut and fabric weight are unreal.</p>
         <div class="sp-rule"></div>
         <div class="sp-author">James T.</div>
         <div class="sp-role">Periodontist &middot; Melbourne, VIC</div>
@@ -1510,12 +1515,147 @@
           <div class="sp-star"></div><div class="sp-star"></div>
         </div>
         <span class="sp-mark">&ldquo;</span>
-        <p class="sp-quote">Clients ask me every single shift where I got my uniform. It elevates the whole experience — you wear better, you work better.</p>
+        <p class="sp-quote">Clients ask where I got my uniform. It elevates the whole salon experience.</p>
         <div class="sp-rule"></div>
         <div class="sp-author">Priya M.</div>
         <div class="sp-role">Beauty Therapist &middot; Brisbane, QLD</div>
       </div>
 
+      <div class="sp-card reveal d1">
+        <div class="sp-stars">
+          <div class="sp-star"></div><div class="sp-star"></div><div class="sp-star"></div>
+          <div class="sp-star"></div><div class="sp-star"></div>
+        </div>
+        <span class="sp-mark">&ldquo;</span>
+        <p class="sp-quote">On my feet all day and these still look sharp at hour eight. Exactly what our salon needed.</p>
+        <div class="sp-rule"></div>
+        <div class="sp-author">Mia L.</div>
+        <div class="sp-role">Nail Technician &middot; Perth, WA</div>
+      </div>
+
+      <div class="sp-card reveal d2">
+        <div class="sp-stars">
+          <div class="sp-star"></div><div class="sp-star"></div><div class="sp-star"></div>
+          <div class="sp-star"></div><div class="sp-star"></div>
+        </div>
+        <span class="sp-mark">&ldquo;</span>
+        <p class="sp-quote">Lightweight, easy to move in, and the pockets are actually where I need them.</p>
+        <div class="sp-rule"></div>
+        <div class="sp-author">Ethan W.</div>
+        <div class="sp-role">Dental Assistant &middot; Brisbane, QLD</div>
+      </div>
+
+      <div class="sp-card reveal d3">
+        <div class="sp-stars">
+          <div class="sp-star"></div><div class="sp-star"></div><div class="sp-star"></div>
+          <div class="sp-star"></div><div class="sp-star"></div>
+        </div>
+        <span class="sp-mark">&ldquo;</span>
+        <p class="sp-quote">I've worn a lot of scrub brands over the years. This is the first one that feels designed by someone who understands a dental day.</p>
+        <div class="sp-rule"></div>
+        <div class="sp-author">Dr. Aisha N.</div>
+        <div class="sp-role">Dentist &middot; Sydney, NSW</div>
+      </div>
+
+      <div class="sp-card reveal d1">
+        <div class="sp-stars">
+          <div class="sp-star"></div><div class="sp-star"></div><div class="sp-star"></div>
+          <div class="sp-star"></div><div class="sp-star"></div>
+        </div>
+        <span class="sp-mark">&ldquo;</span>
+        <p class="sp-quote">Didn't expect front-of-house to get scrubs this nice too — makes the whole practice look consistent.</p>
+        <div class="sp-rule"></div>
+        <div class="sp-author">Chloe B.</div>
+        <div class="sp-role">Dental Receptionist &middot; Gold Coast, QLD</div>
+      </div>
+
+      <div class="sp-card reveal d2">
+        <div class="sp-stars">
+          <div class="sp-star"></div><div class="sp-star"></div><div class="sp-star"></div>
+          <div class="sp-star"></div><div class="sp-star"></div>
+        </div>
+        <span class="sp-mark">&ldquo;</span>
+        <p class="sp-quote">Twelve-hour shifts are brutal on uniforms. These have held up better than anything else I've tried.</p>
+        <div class="sp-rule"></div>
+        <div class="sp-author">Grace H.</div>
+        <div class="sp-role">Registered Nurse &middot; Canberra, ACT</div>
+      </div>
+
+      <div class="sp-card reveal d3">
+        <div class="sp-stars">
+          <div class="sp-star"></div><div class="sp-star"></div><div class="sp-star"></div>
+          <div class="sp-star"></div>
+        </div>
+        <span class="sp-mark">&ldquo;</span>
+        <p class="sp-quote">Really happy with the fit and fabric — just wish there were a couple more colour options for our team.</p>
+        <div class="sp-rule"></div>
+        <div class="sp-author">Liam F.</div>
+        <div class="sp-role">Beauty Therapist &middot; Melbourne, VIC</div>
+      </div>
+
+      <div class="sp-card reveal d1">
+        <div class="sp-stars">
+          <div class="sp-star"></div><div class="sp-star"></div><div class="sp-star"></div>
+          <div class="sp-star"></div><div class="sp-star"></div>
+        </div>
+        <span class="sp-mark">&ldquo;</span>
+        <p class="sp-quote">Clients notice before I even say a word. It's part of the experience now.</p>
+        <div class="sp-rule"></div>
+        <div class="sp-author">Zara S.</div>
+        <div class="sp-role">Cosmetic Injector &middot; Sydney, NSW</div>
+      </div>
+
+      <div class="sp-card reveal d2">
+        <div class="sp-stars">
+          <div class="sp-star"></div><div class="sp-star"></div><div class="sp-star"></div>
+          <div class="sp-star"></div><div class="sp-star"></div>
+        </div>
+        <span class="sp-mark">&ldquo;</span>
+        <p class="sp-quote">Comfortable enough that I forget I'm wearing work clothes by lunchtime.</p>
+        <div class="sp-rule"></div>
+        <div class="sp-author">Ben C.</div>
+        <div class="sp-role">Allied Health Assistant &middot; Newcastle, NSW</div>
+      </div>
+
+      <div class="sp-card reveal d3">
+        <div class="sp-stars">
+          <div class="sp-star"></div><div class="sp-star"></div><div class="sp-star"></div>
+          <div class="sp-star"></div><div class="sp-star"></div>
+        </div>
+        <span class="sp-mark">&ldquo;</span>
+        <p class="sp-quote">Ordered for the whole salon. Everyone's already asking when the next colours drop.</p>
+        <div class="sp-rule"></div>
+        <div class="sp-author">Ruby A.</div>
+        <div class="sp-role">Nail Technician &middot; Sydney, NSW</div>
+      </div>
+
+      <div class="sp-card reveal d1">
+        <div class="sp-stars">
+          <div class="sp-star"></div><div class="sp-star"></div><div class="sp-star"></div>
+          <div class="sp-star"></div><div class="sp-star"></div>
+        </div>
+        <span class="sp-mark">&ldquo;</span>
+        <p class="sp-quote">Got the whole front and back of house into matching sets with our logo embroidered on. Looks incredibly professional.</p>
+        <div class="sp-rule"></div>
+        <div class="sp-author">Olivia P.</div>
+        <div class="sp-role">Practice Manager &middot; Perth, WA</div>
+      </div>
+
+      <div class="sp-card reveal d2">
+        <div class="sp-stars">
+          <div class="sp-star"></div><div class="sp-star"></div><div class="sp-star"></div>
+          <div class="sp-star"></div><div class="sp-star"></div>
+        </div>
+        <span class="sp-mark">&ldquo;</span>
+        <p class="sp-quote">Doesn't look or feel like a uniform. Feels like clothing that happens to be practical.</p>
+        <div class="sp-rule"></div>
+        <div class="sp-author">Marcus D.</div>
+        <div class="sp-role">Cosmetic Nurse &middot; Adelaide, SA</div>
+      </div>
+
+      </div>
+
+      <button class="carousel-arrow sp-arrow-next" aria-label="Next reviews" onclick="scrollSpCarousel(1)">&rarr;</button>
     </div>
   </section>
 
@@ -1527,7 +1667,7 @@
     </div>
 
     <div class="who-carousel-wrap">
-      <button class="who-arrow who-arrow-prev" aria-label="Previous professionals" onclick="scrollWhoCarousel(-1)">&larr;</button>
+      <button class="carousel-arrow who-arrow-prev" aria-label="Previous professionals" onclick="scrollWhoCarousel(-1)">&larr;</button>
 
       <div class="who-grid" id="whoCarousel" role="region" aria-label="Who we dress" tabindex="0">
 
@@ -1603,7 +1743,7 @@
 
       </div>
 
-      <button class="who-arrow who-arrow-next" aria-label="Next professionals" onclick="scrollWhoCarousel(1)">&rarr;</button>
+      <button class="carousel-arrow who-arrow-next" aria-label="Next professionals" onclick="scrollWhoCarousel(1)">&rarr;</button>
     </div>
   </section>
 
@@ -1897,6 +2037,14 @@
     function scrollWhoCarousel(direction) {
       const track = document.getElementById('whoCarousel');
       const card = track.querySelector('.who-card');
+      const cardWidth = card ? card.getBoundingClientRect().width : 340;
+      track.scrollBy({ left: direction * (cardWidth + 3), behavior: 'smooth' });
+    }
+
+    // Reviews carousel
+    function scrollSpCarousel(direction) {
+      const track = document.getElementById('spCarousel');
+      const card = track.querySelector('.sp-card');
       const cardWidth = card ? card.getBoundingClientRect().width : 340;
       track.scrollBy({ left: direction * (cardWidth + 3), behavior: 'smooth' });
     }
