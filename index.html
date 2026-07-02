@@ -1476,10 +1476,10 @@
   <!-- MISSION STRIP -->
   <section id="mission">
     <div class="mission-tag reveal">You deserve it</div>
-    <div class="mission-quote reveal d1">"Wear what<br>you stand for."</div>
+    <div class="mission-quote reveal d1">"Every shift is<br>an act of light."</div>
     <div class="mission-rule reveal d2">
       <div class="mission-line"></div>
-      <div class="mission-sub">ORA &mdash; for the ones who show up</div>
+      <div class="mission-sub">ORA &mdash; אוֹרָה &mdash; means light in Hebrew</div>
       <div class="mission-line"></div>
     </div>
   </section>
@@ -1539,7 +1539,7 @@
   <footer>
     <div class="footer-left">
       <div class="footer-logo">ORA</div>
-      <div class="footer-tag">Premium Designer Scrubs</div>
+      <div class="footer-tag">Wear your calling.</div>
     </div>
     <div class="footer-center-wrap">
       <div class="footer-hebrew">ORA</div>
@@ -1686,6 +1686,8 @@
         const men = products.filter(p => p.gender === 'Men');
         document.querySelector('#tab-women .col-grid').innerHTML = women.map(productCard).join('');
         document.querySelector('#tab-men .col-grid').innerHTML = men.map(productCard).join('');
+        document.querySelector('[data-tab="women"]').textContent = `Women — ${women.length} Styles`;
+        document.querySelector('[data-tab="men"]').textContent = `Men — ${men.length} Styles`;
       } catch (err) {
         console.error('Could not load products:', err);
         document.querySelector('#tab-women .col-grid').innerHTML = '<p style="color:rgba(245,240,232,0.5)">Products are loading — check back shortly.</p>';
